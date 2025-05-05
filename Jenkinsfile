@@ -20,12 +20,12 @@ pipeline {
         sh "mvn clean package"
       }
     }
-    stage ("Test Application"){
+    stage("Test Application"){
       steps {
         sh "mvn test"
       }
     }
-    stage ("SonarQube Analysis"){
+    stage("SonarQube Analysis"){
       steps {
         script {
           withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
@@ -34,10 +34,10 @@ pipeline {
         }
       }
     }
-    stage ("Quality Gate"){
+    stage("Quality Gate"){
       steps {
         script {
-          withForQualityGate(abortPipeline: false, credentialsId: 'jenkins-sonarqube-token')
+          waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
         }
       }
     }
