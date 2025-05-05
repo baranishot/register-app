@@ -7,8 +7,8 @@ pipeline {
   environment {
     APP_NAME = "register-app-pipeline"
     RELEASE = "1.0.0"
-    DOCKER_USER = "baranishot" // Make sure to store in Jenkins credentials if possible
-    DOCKER_PASS = "dockerhub" // Reference to Jenkins credentials store
+    DOCKER_USER = "baranishot"
+    DOCKER_PASS = credentials('dockerhub') // Use credentials securely
     IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
     IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
   }
