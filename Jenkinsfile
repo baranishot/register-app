@@ -53,7 +53,7 @@ pipeline {
       steps {
         script {
           // Using Docker Hub with the proper registry URL
-          docker.withRegistry('https://hub.docker.com/repositories/baranishot/', DOCKER_PASS) {
+          docker.withRegistry('https://hub.docker.com/v2/', DOCKER_PASS) {
             def docker_image = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
             docker_image.push()
             docker_image.push('latest')  // Optionally push the 'latest' tag as well
