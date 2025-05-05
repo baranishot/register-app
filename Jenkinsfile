@@ -61,6 +61,8 @@ pipeline {
             docker_image = docker.push('latest')
           }
         }
-     }
-   }
-}
+      }
+    }
+  }
+} 
+  
