@@ -51,13 +51,16 @@ pipeline {
     }
     stages("Build and Push Docker Image") {
       steps {
-        docker.withRegistry('',DOCKER_PASS) {
-          docker_image = docker.build "${DOCKER_NAME}"
+        scripts {
+           docker.withRegistry('',DOCKER_PASS) {
+            docker_image = docker.build "${DOCKER_NAME}"
+          }
+          
+          docker.withRegistry('',DOCKER_PASS) {
+            docker_image = docker.push("${IMAGE_TAG}")
+            docker_image = docker.push('latest')
+          }
         }
-        docker.withRegistry('',DOCKER_PASS) {
-          docker_image = docker.push("${IMAGE_TAG}")
-          docker_image = docker.push('latest')
-      }
-    }
-  }
+     }
+   }
 }
