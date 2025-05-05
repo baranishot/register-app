@@ -64,21 +64,4 @@ pipeline {
       }
     }
   }
-
-//   post {
-//     always {
-//       // Clean up any temporary resources if needed
-//       cleanWs()
-//     }
-
-//     success {
-//       // Send success notifications if needed
-//       echo "Pipeline succeeded!"
-//     }
-
-//     failure {
-//       // Send failure notifications if needed
-//       echo "Pipeline failed!"
-//     }
-//   }
-// }  
+}
