@@ -52,6 +52,7 @@ pipeline {
     stage("Build and Push Docker Image") {
       steps {
         script {
+          sh "ls -l target/*.war" // Optional: to verify the WAR file exists
            docker.withRegistry('',DOCKER_PASS) {
             docker_image = docker.build "${IMAGE_NAME}"
           }
