@@ -7,9 +7,9 @@ pipeline {
   environment {
     APP_NAME = "register-app-pipeline"
     RELEASE = "1.0.0"
-    DOCKER_USER = "baranishot"
-    DOCKER_PASS = "dockerhub"
-    IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+    DOCKER_USER = "baranishot" // Make sure to store in Jenkins credentials if possible
+    DOCKER_PASS = credentials('dockerhub-password') // Reference to Jenkins credentials store
+    IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
     IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
   }
   stages{ 
@@ -52,17 +52,31 @@ pipeline {
     stage("Build and Push Docker Image") {
       steps {
         script {
-           docker.withRegistry('',DOCKER_PASS) {
-            docker_image = docker.build "${IMAGE_NAME}"
-          }
-          
-          docker.withRegistry('',DOCKER_PASS) {
-            docker_image = docker.push("${IMAGE_TAG}")
-            docker_image = docker.push('latest')
+          // Using Docker Hub with the proper registry URL
+          docker.withRegistry('https://index.docker.io/v1/', DOCKER_PASS) {
+            def docker_image = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+            docker_image.push()
+            docker_image.push('latest')  // Optionally push the 'latest' tag as well
           }
         }
       }
     }
   }
-} 
-  
+
+  post {
+    always {
+      // Clean up any temporary resources if needed
+      cleanWs()
+    }
+
+    success {
+      // Send success notifications if needed
+      echo "Pipeline succeeded!"
+    }
+
+    failure {
+      // Send failure notifications if needed
+      echo "Pipeline failed!"
+    }
+  }
+}  
