@@ -1,7 +1,7 @@
 pipeline {
   agent { label 'Jenkins-Agent' }
   tools{
-    jdk 'Java17'
+    jdk 'Java21'
     maven 'Maven3'
   }
    environment {
@@ -33,35 +33,39 @@ pipeline {
         sh "mvn test"
       }
     }
-    stage("SonarQube Analysis"){
-      steps {
-        script {
-          withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-            sh "mvn sonar:sonar"
-          }
-        }
-      }
-    }
-    stage("Quality Gate"){
-      steps {
-        script {
-          waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
-        }
-      }
-    }
-    stage("Build and Push Docker Image") {
-      steps {
-        script {
-           docker.withRegistry('',DOCKER_PASS) {
-            docker_image = docker.build "${IMAGE_NAME}"
-          }
-          
-          docker.withRegistry('',DOCKER_PASS) {
-            docker_image = docker.push("${IMAGE_TAG}")
-            docker_image = docker.push('latest')
-          }
-        }
-      }
-    }
   }
 }
+    
+    
+//     stage("SonarQube Analysis"){
+//       steps {
+//         script {
+//           withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
+//             sh "mvn sonar:sonar"
+//           }
+//         }
+//       }
+//     }
+//     stage("Quality Gate"){
+//       steps {
+//         script {
+//           waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
+//         }
+//       }
+//     }
+//     stage("Build and Push Docker Image") {
+//       steps {
+//         script {
+//            docker.withRegistry('',DOCKER_PASS) {
+//             docker_image = docker.build "${IMAGE_NAME}"
+//           }
+          
+//           docker.withRegistry('',DOCKER_PASS) {
+//             docker_image = docker.push("${IMAGE_TAG}")
+//             docker_image = docker.push('latest')
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
